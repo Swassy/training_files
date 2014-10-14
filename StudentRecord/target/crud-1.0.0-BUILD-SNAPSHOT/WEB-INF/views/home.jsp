@@ -115,7 +115,7 @@ function retrieveRec( bool)
 			  			max_page_content(tot_cont);
 			  			
 			  			max_pg_no=Math.ceil((rec[0].totalContent)/($("#contents_per_page").val()));
-				  		//alert(max_pg_no);
+				  		alert(max_pg_no);
 				  		max_page_no(max_pg_no);
 				  		
 			  		}
@@ -123,7 +123,7 @@ function retrieveRec( bool)
 			  	
 			  		var len=rec.length;
 			  		var respContent = "<table style='border:1px solid;background:#98bf21'><th>NAME</th><th>ROLL</th><th>GENDER</th>";
-			  		for(var i=1;i<len;i++){
+			  		 for(var i=1;i<len;i++){
 			  			var str;
 			  			if(i&1)str="white";
 			  			else str="aqua";

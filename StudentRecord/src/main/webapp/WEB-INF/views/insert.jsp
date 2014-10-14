@@ -119,11 +119,11 @@ a:hover, a:active {
         		//alert("The returnd response is "+ studen);
         		
         		var respContent = "";
-        		//alert(studen.length);
-		  		respContent += "<table style='border:1px solid;background:#98bf21'>";
+        		alert(studen.length);
+		  		/* respContent += "<table style='border:1px solid;background:#98bf21'>";
 		  		respContent +="<tr style='border:2px solid;background:white'><td><b>NAME</b></td><td style='background:white'>"+studen[0].name+"</td></tr>";
 		  		respContent +="<tr style='border:2px solid;background:white'><td><b>ROLL</b></td><td style='background:white'>"+studen[0].roll+"</td></tr>";
-		  		respContent +="<tr style='border:2px solid;background:white'><td><b>GENDER</b></td><td style='background:white'>"+studen[0].gender+"</td></tr>";
+		  		respContent +="<tr style='border:2px solid;background:white'><td><b>GENDER</b></td><td style='background:white'>"+studen[0].gender+"</td></tr>"; */
 		  		respContent+="</table>"
         		
         		   		

@@ -1,27 +1,37 @@
 package com.school.record.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
-import javax.sql.DataSource;
+import javax.annotation.Resource;
 
-import com.school.record.database.StudentDatabaseInterface;
-import com.school.record.model.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+//import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.school.record.model.StudentBean;
  
-public class StudentDatabase implements StudentDatabaseInterface
+@Repository
+public class StudentDatabase 
 {
-	private DataSource dataSource;
+	
+	
+	/*@Resource(name="dataSource")
+	private DataSource dataSource;*/
  
-	public void setDataSource(DataSource dataSource) {
+	@Autowired//@Resource(name = "sessionFactory")
+	SessionFactory sessionFactory ;
+	
+	/*public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
-	}
+	}*/
  
 	public void insert(StudentBean sb){
+		
  
-		String sql = "INSERT INTO student " +
+		/*String sql = "INSERT INTO student " +
 				"(roll,name, std, gender,school, percentage) VALUES (?, ?, ?, ?, ?, ?)";
 		Connection conn = null;
  
@@ -46,16 +56,39 @@ public class StudentDatabase implements StudentDatabaseInterface
 					conn.close();
 				} catch (SQLException e) {}
 			}
-		}
+		}*/
+		
+		/*Configuration configuration = new Configuration().configure();
+		StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+		SessionFactory factory = configuration.buildSessionFactory(builder.build());*/
+		Session session = sessionFactory.getCurrentSession();
+		//session.beginTransaction();
+		
+		session.save(sb);
+		 
+        //Commit the transaction
+        //session.getTransaction().commit();
+        //session.close();
 	}
  
-	public ArrayList<StudentBean> search(String category, String value){
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public List<StudentBean> search(/*String category, */int value){
 		
-		//System.out.println("Category:"+category+"\nValue:"+value);
-		String sql = "SELECT * FROM student where "+category+" = "+value;
+		//Configuration configuration = new Configuration().configure();
+		//StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+		//= configuration.buildSessionFactory(builder.build());
+		Session session = sessionFactory.openSession();
+		//session.beginTransaction();
+        List<StudentBean> list = session.createQuery("from com.school.record.model.StudentBean stud where stud.roll = :roll")
+            .setParameter("roll", value)
+            .list();
+        return list.size() > 0 ? list: null;
+		
+		
+		/*String sql = "SELECT * FROM student where "+category+" = "+value;
  
 		Connection conn = null;
-		//String a="";
+		
  
 		try {
 			conn = dataSource.getConnection();
@@ -79,7 +112,7 @@ public class StudentDatabase implements StudentDatabaseInterface
 			}
 			rs.close();
 			ps.close();
-			//System.out.println(student);
+		
 			return student;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -90,13 +123,13 @@ public class StudentDatabase implements StudentDatabaseInterface
 				
 				} catch (SQLException e) {}
 			}
-		}
+		}*/
 	}
 	public void delete(int roll){
-		String sql = "DELETE FROM student where roll = "+roll;
+		/*String sql = "DELETE FROM student where roll = "+roll;
 		 
 		Connection conn = null;
-		//String a="";
+		
  
 		try {
 			conn = dataSource.getConnection();
@@ -118,17 +151,24 @@ public class StudentDatabase implements StudentDatabaseInterface
 				
 				} catch (SQLException e) {}
 			}
-		}
+		}*/
 	
 		
 	}
-	public ArrayList<StudentBean> displayAll(int page_no, int contents_per_page){
+	@SuppressWarnings("unchecked")
+	public List<StudentBean> displayAll(int page_no, int contents_per_page){
+		//Configuration configuration = new Configuration().configure();
+				//StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+				//= configuration.buildSessionFactory(builder.build());
+				Session factory = sessionFactory.openSession();
+		return factory
+	            .createQuery("from com.school.record.model.StudentBean").list();
 		 
-		String sql = "SELECT * FROM student limit "+(((page_no-1)*contents_per_page)+1)+" , "+contents_per_page;
-		System.out.println("page no : "+page_no+" \ncpp : "+contents_per_page);
+		/*String sql = "SELECT * FROM student limit "+(((page_no-1)*contents_per_page)+1)+" , "+contents_per_page;
+		
 		Connection conn = null;
 		Connection conn1=null;
-		//String a="";
+		
  
 		try {
 			ArrayList<StudentBean> student= new ArrayList<StudentBean>();
@@ -170,7 +210,8 @@ public class StudentDatabase implements StudentDatabaseInterface
 				
 				} catch (SQLException e) {}
 			}
-		}
+		}*/
+		
 	}
 	
 

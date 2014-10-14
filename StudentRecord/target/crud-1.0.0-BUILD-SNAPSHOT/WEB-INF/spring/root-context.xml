@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	  xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<import resource="classpath*:Student-database.xml" />
 	<import resource="classpath*:Student-model.xml" />	
+	<import resource="classpath*:hibernate.cfg.xml" />
+	<bean id="homeController"
+		class="com.school.record.HomeController"></bean>
+    <bean id="stud" class="com.school.record.model.StudentBean"></bean>
 	<bean id="json_mapper" class="com.school.record.Mapper">
 	</bean>
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"/>
+	<tx:annotation-driven transaction-manager="txManager"/>
+	
 </beans>

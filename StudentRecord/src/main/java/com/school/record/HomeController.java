@@ -1,13 +1,15 @@
 package com.school.record;
 
 import java.io.IOException;
+import com.school.record.service.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+//import javax.annotation.Resource;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 //import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +30,14 @@ import com.school.record.model.StudentBean;
  */
 @Controller
 public class HomeController{
-	@Resource(name="stud") StudentDatabase stud;
+	//@Resource(name="stud") @Autowired 
+	@Autowired
+	StudentDatabase stud;
+	@Autowired
 	StudentBean sb=new StudentBean();
+	
+	@Autowired
+	StudentService service;
 	int page_no;
 	int contents_per_page;
 	
@@ -60,12 +68,12 @@ public class HomeController{
 		//System.out.println(jsb);
 		
 		StudentBean sb=Mapper.fromJson(jsb);
-		stud.insert(sb);
+		service.insert(sb);
 		int roll = sb.getRoll();
 		//System.out.println(roll);
 		
 		List<StudentBean> rec= new ArrayList<StudentBean>();
-		rec= stud.search("roll",(" "+roll));
+		rec= service.search(roll);
 		
 		
 		
@@ -101,7 +109,7 @@ public class HomeController{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		rec=stud.displayAll(page_no,contents_per_page);
+		rec=service.displayAll();//(page_no,contents_per_page);
 		
 			
 		return rec;

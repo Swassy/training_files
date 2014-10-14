@@ -1,14 +1,50 @@
 package com.school.record.model;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-//@Entity
-public class StudentBean implements StudentBeanInterface {
+//import org.hibernate.annotations.Entity;
+//import org.hibernate.annotations.Table;
+
+
+
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@SuppressWarnings("serial")
+@Entity
+
+@Table(name="student")
+public class StudentBean implements Serializable {
 	
-	private String name,gender,school;
-	private int roll,std,percentage;
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="gender")
+	private String gender;
+	
+	@Id
+	@Column(name="school")
+	private String school;
+	
+	@Id
+	@Column(name="roll")
+	private int roll;
+	
+	@Id
+	@Column(name="std")
+	private int std;
+	
+	@Column(name="percentage")
+	private int percentage;
+	
 	private int total_content;
 	
 	public StudentBean(){
