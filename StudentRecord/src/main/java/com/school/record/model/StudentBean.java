@@ -20,7 +20,6 @@ import javax.persistence.Table;
 
 @SuppressWarnings("serial")
 @Entity
-
 @Table(name="student")
 public class StudentBean implements Serializable {
 	

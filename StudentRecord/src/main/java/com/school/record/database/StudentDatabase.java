@@ -1,14 +1,19 @@
 package com.school.record.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+/*import javax.annotation.Resource;*/
+import javax.persistence.EntityManager;
+/*import javax.persistence.EntityManagerFactory;*/
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+/*import org.hibernate.Session;*/
+/*import org.hibernate.SessionFactory;*/
+/*import org.hibernate.cfg.Configuration;*/
 //import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
+/*import org.springframework.beans.factory.annotation.Autowired;*/
 import org.springframework.stereotype.Repository;
 
 import com.school.record.model.StudentBean;
@@ -18,199 +23,57 @@ public class StudentDatabase
 {
 	
 	
-	/*@Resource(name="dataSource")
-	private DataSource dataSource;*/
+	@PersistenceContext
+	EntityManager em;
+	 
  
-	@Autowired//@Resource(name = "sessionFactory")
-	SessionFactory sessionFactory ;
+	/*@Autowired//@Resource(name = "sessionFactory")
+	SessionFactory sessionFactory ;*/
 	
-	/*public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}*/
  
 	public void insert(StudentBean sb){
 		
  
-		/*String sql = "INSERT INTO student " +
-				"(roll,name, std, gender,school, percentage) VALUES (?, ?, ?, ?, ?, ?)";
-		Connection conn = null;
- 
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, sb.getRoll());
-			ps.setString(2, sb.getName());
-			ps.setInt(3, sb.getStd());
-			ps.setString(4, sb.getGender());
-			ps.setString(5, sb.getSchool());
-			ps.setInt(6, sb.getPercentage());
-			ps.executeUpdate();
-			ps.close();
- 
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
- 
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {}
-			}
-		}*/
 		
-		/*Configuration configuration = new Configuration().configure();
-		StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-		SessionFactory factory = configuration.buildSessionFactory(builder.build());*/
-		Session session = sessionFactory.getCurrentSession();
-		//session.beginTransaction();
+		/*EntityManager em= emf.createEntityManager();*/
 		
-		session.save(sb);
+		this.em.persist(sb);
+		this.em.flush();
+		/*session.save(sb);*/
 		 
-        //Commit the transaction
-        //session.getTransaction().commit();
-        //session.close();
+       
 	}
  
-	@SuppressWarnings({ "deprecation", "unchecked" })
-	public List<StudentBean> search(/*String category, */int value){
-		
-		//Configuration configuration = new Configuration().configure();
-		//StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-		//= configuration.buildSessionFactory(builder.build());
-		Session session = sessionFactory.openSession();
-		//session.beginTransaction();
-        List<StudentBean> list = session.createQuery("from com.school.record.model.StudentBean stud where stud.roll = :roll")
-            .setParameter("roll", value)
-            .list();
-        return list.size() > 0 ? list: null;
+	
+	public List<StudentBean> search(int value){
+		 
+		 String sql="FROM StudentBean  WHERE roll= :roll";
+		 TypedQuery<StudentBean> query = em.createQuery(sql, StudentBean.class);
+		 query.setParameter("roll", value);
+		 List<StudentBean> list = new ArrayList<StudentBean>();
+		 list.add(query.getSingleResult());
+		 return list;	
 		
 		
-		/*String sql = "SELECT * FROM student where "+category+" = "+value;
- 
-		Connection conn = null;
-		
- 
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ArrayList<StudentBean> student= new ArrayList<StudentBean>();
-			 
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				StudentBean sb = new StudentBean(
-						rs.getInt("roll"),
-					rs.getString("name"),
-					rs.getInt("std"),
-					rs.getString("gender"),
-					rs.getString("school"),
-					rs.getInt("percentage")
-
-				);
-				student.add(sb);
-				
-			}
-			rs.close();
-			ps.close();
-		
-			return student;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-				conn.close();
-				
-				} catch (SQLException e) {}
-			}
-		}*/
 	}
+	
+	
 	public void delete(int roll){
-		/*String sql = "DELETE FROM student where roll = "+roll;
-		 
-		Connection conn = null;
 		
- 
-		try {
-			conn = dataSource.getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			
-			 
-			ResultSet rs = ps.executeQuery();
-			
-			rs.close();
-			ps.close();
-			
-			
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-				conn.close();
-				
-				} catch (SQLException e) {}
-			}
-		}*/
+		this.em.remove(search(roll));
 	
 		
 	}
-	@SuppressWarnings("unchecked")
-	public List<StudentBean> displayAll(int page_no, int contents_per_page){
-		//Configuration configuration = new Configuration().configure();
-				//StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-				//= configuration.buildSessionFactory(builder.build());
-				Session factory = sessionFactory.openSession();
-		return factory
-	            .createQuery("from com.school.record.model.StudentBean").list();
+	
+	
+	public List<StudentBean> displayAll(){
+		
+		String qlString = "SELECT p FROM Podcast p";
+	    TypedQuery<StudentBean> query = em.createQuery(qlString, StudentBean.class);        
+	 
+	    return query.getResultList();
 		 
-		/*String sql = "SELECT * FROM student limit "+(((page_no-1)*contents_per_page)+1)+" , "+contents_per_page;
 		
-		Connection conn = null;
-		Connection conn1=null;
-		
- 
-		try {
-			ArrayList<StudentBean> student= new ArrayList<StudentBean>();
-			conn = dataSource.getConnection();
-			conn1 = dataSource.getConnection();
-			PreparedStatement ps2=conn1.prepareStatement("SELECT COUNT(*) as 'student_count' FROM student");
-			ResultSet rs2=ps2.executeQuery();
-			student.add(new StudentBean(rs2));
-			PreparedStatement ps = conn.prepareStatement(sql);
-			
-			 
-			ResultSet rs = ps.executeQuery();
-			
-			while(rs.next()) {
-				StudentBean sb = new StudentBean(
-						rs.getInt("roll"),
-					rs.getString("name"),
-					rs.getInt("std"),
-					rs.getString("gender"),
-					rs.getString("school"),
-					rs.getInt("percentage")
-
-				);
-				student.add(sb);
-				
-			}
-			rs.close();
-			ps.close();
-			rs2.close();
-			ps2.close();
-			
-			return student;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (conn != null) {
-				try {
-				conn.close();
-				
-				} catch (SQLException e) {}
-			}
-		}*/
 		
 	}
 	

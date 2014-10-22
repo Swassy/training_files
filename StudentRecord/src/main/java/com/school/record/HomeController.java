@@ -1,11 +1,15 @@
 package com.school.record;
 
 import java.io.IOException;
-import com.school.record.service.*;
 import java.util.ArrayList;
 import java.util.List;
 
 //import javax.annotation.Resource;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -15,8 +19,6 @@ import org.springframework.stereotype.Controller;
 //import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 //import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,17 +26,19 @@ import org.springframework.web.servlet.ModelAndView;
 import com.school.record.database.StudentDatabase;
 import com.school.record.model.PaginationBean;
 import com.school.record.model.StudentBean;
+import com.school.record.service.StudentService;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
+@Path("student")
 public class HomeController{
 	//@Resource(name="stud") @Autowired 
 	@Autowired
 	StudentDatabase stud;
-	@Autowired
-	StudentBean sb=new StudentBean();
+	
+	/*StudentBean sb;*/
 	
 	@Autowired
 	StudentService service;
@@ -46,21 +50,23 @@ public class HomeController{
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/")
+	@Path("/")
 	public ModelAndView home() {
+		System.out.println("home......");
 		ModelAndView model=new ModelAndView("home");
 		System.out.println("HOME");
 		return model;
 	}
 	
-	@RequestMapping(value = "insert", method = RequestMethod.GET)
+	@Path("/insert")
+	@GET
 	public ModelAndView insertForm() {
 		ModelAndView model=new ModelAndView("insert");
 		System.out.println("insert-get");
 		return model;
 	}
 	
-	@RequestMapping(value = "insert", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,consumes= MediaType.APPLICATION_JSON_VALUE)
+	@Path("insert") @POST @Produces(MediaType.APPLICATION_JSON_VALUE) @Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	
 	public List<StudentBean> insert(@RequestBody String jsb) throws JsonMappingException, JsonParseException, IOException {
@@ -86,8 +92,8 @@ public class HomeController{
 		return model;
 	}*/
 	
-	@RequestMapping(value = "viewall", method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,consumes= MediaType.APPLICATION_JSON_VALUE)
+	@Path("viewall")@POST
+			@Produces(MediaType.APPLICATION_JSON_VALUE) @Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<StudentBean> viewAll(@RequestBody String inputJson) {
 		
@@ -114,13 +120,13 @@ public class HomeController{
 			
 		return rec;
 	}
-	@RequestMapping(value = "search")//, method = RequestMethod.POST)
+	@Path("search")
 	public ModelAndView search() {
 		ModelAndView model=new ModelAndView("search");
 		
 		return model;
 	}
-	@RequestMapping(value = "delete")//, method = RequestMethod.POST)
+	@Path("delete")
 	public ModelAndView delete() {
 		ModelAndView model=new ModelAndView("delete");
 		

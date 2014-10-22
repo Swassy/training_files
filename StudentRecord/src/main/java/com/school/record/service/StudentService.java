@@ -27,7 +27,7 @@ public class StudentService {
  
     
     public List<StudentBean> displayAll() {
-        return stud.displayAll(1, 10);
+        return stud.displayAll();
     }
  
     /*@Transactional
